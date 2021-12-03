@@ -1,3 +1,5 @@
+from Board import *
+
 class Player:
     def __init__ (self, name):
         self.name = name
@@ -5,6 +7,8 @@ class Player:
         self.stars = 0
         self.current_space = 0
         self.wins = 0
+        self.visited = []
+        self.type = "UNASSIGNED PLAYER"
 
     def buyStar(self):
         if self.coins >= 20:
@@ -20,15 +24,17 @@ class Player:
         self.wins += 1
 
     def status(self):
-        return f"{self.name}: {self.coins}c, {self.stars}s "
+        return f"{self.name} ({self.type}) at {self.current_space}: {self.coins}c, {self.stars}s "
 
     def choosePath(self, board):
-        # Run down each path, count spaces until star
+        print ("UNASSIGNED PLAYER PASSING JUNCTION!!!")
+        return board.debugJunction()
+
         """
 
         This works, but freaks out because loops in lists are hard.
         Easier to build a case switch for the shortest star path for every junction
-        
+
         spaces = [0,1,2,3,4,5,6,7,8,9,10]
         neighbors = [1,2,3,[4,7],5,6,0,[8,9],10,0]
         star = 9

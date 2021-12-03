@@ -1,5 +1,7 @@
 from Board import *
 from Player import *
+from GreedyPlayer import *
+from PessimistPlayer import *
 
 
 class Game:
@@ -16,9 +18,9 @@ class Game:
 
     def initPlayers(self):
         self.players = [
-            Player("Mario"),
+            Greedy("Mario"),
             Player("Wario"),
-            Player("Luigi"),
+            Pessimist("Luigi"),
             Player("Waluigi")
         ]
 
@@ -33,14 +35,20 @@ class Game:
 
     def playGame(self):
         while self.current_turn < self.turn_limit:
+            print (f"-------------------------- Turn {self.current_turn} -----------------------------------")
             self.playTurn()
             self.current_turn += 1
+
         print("Game over")
+        for p in self.players:
+            print(p.status())
+            print(f"{p.visited}")
         self.results()
         self.reset()
 
     def playTurn(self):
         for p in self.players:
+            print (f"-------------------------- Player {p.name} ----------------------")
             self.board.movePlayer(p, self.roll())
         self.minigame()
 

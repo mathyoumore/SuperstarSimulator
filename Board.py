@@ -3,7 +3,23 @@ from random import shuffle
 from Space import *
 
 STAR_SPACES = [3,6,9,12,15,18]
-NEIGHBORS = [1,2,3,4,[5,20],6,7,8,9,10,11,12,13,14,15,16,17,18,19,0,21,22,23,6]
+NEIGHBORS = [1,2,3,4,[5,20],6,7,8,9,10,11,12,13,14,15,16,17,18,19,0,21,22,23,14]
+SHORTEST_TO_STAR = {
+    3: 20,
+    6: 5,
+    9: 5,
+    12: 5,
+    15: 20,
+    18: 20
+}
+SECOND_TO_STAR = {
+    3: 5,
+    6: 20,
+    9: 20,
+    12: 20,
+    15: 5,
+    18: 5
+}
 
 class Board:
     def __init__(self, name):
@@ -27,7 +43,6 @@ class Board:
             else:
                 space = "GREEN"
             self.spaces.append(Space(space, x, NEIGHBORS[x]))
-            print(f"{self.spaces[x].debugTellSecrets()}")
 
     def resetStarSpaces(self):
         for s in STAR_SPACES:
@@ -41,6 +56,7 @@ class Board:
         new_star_space = self.star_spaces.pop()
         if len(self.star_spaces) == 0:
             self.resetStarSpaces()
+        print(f"Hi, I moved the star to {new_star_space}")
         return new_star_space
 
     def debugTellSecrets(self):
@@ -58,23 +74,34 @@ class Board:
         return self.spaces[space_address].color
 
     def movePlayer(self, player, roll):
-        current = player.current_space
+
+        # Go one-by-one and check each space for a special event
         for x in range(0, roll):
-            go_to = self.spaces[current].next_space
-            if type([go_to]) == type([0]):
-                player.choosePath(self)
+
+            # look at the next space
+            go_to = self.spaces[player.current_space].next_space
+
+            # if the next space is a junction, logic depends on player intelligence
+            if type(go_to) == type([0]):
+                    go_to = player.choosePath(self)
+                    
+            # if the next space is a star
             if go_to == self.current_star_space:
                 if player.buyStar():
                     self.current_star_space = self.setCurrentStarSpace()
-                go_to = go_to.next_space
-        player.current_space = go_to
+                # stars aren't a space, so move to the next one
+                go_to = self.nextSpace(go_to)
 
-    # def movePlayer(self, player, roll):
-    #     go_to = player.current_space
-    #     for x in range(0, roll):
-    #         go_to = self.nextSpace(go_to)
-    #         if go_to == self.current_star_space:
-    #             if player.buyStar():
-    #                 self.current_star_space = self.setCurrentStarSpace()
-    #             go_to = self.nextSpace(go_to)
-    #     player.current_space = go_to
+            # move player to the next space they need to go to, store that new space
+
+            player.current_space = go_to
+            player.visited.append(go_to)
+
+    def shortestPath(self):
+        return SHORTEST_TO_STAR[self.current_star_space]
+
+    def secondShortestPath(self):
+        return SECOND_TO_STAR[self.current_star_space]
+
+    def debugJunction(self):
+        return 5
