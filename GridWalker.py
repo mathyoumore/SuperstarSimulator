@@ -16,12 +16,15 @@ def distanceToStar(neighbors, star_space, starting_space, visited=None):
 
     # If the starting space is the star, the player is actually
     # in front of the star, so scoot them forward
-    if starting_space != star_space:
-        distance = 0
-        current_space = starting_space
-    else:
-        distance = 1
-        current_space = neighbors[starting_space]
+
+    # if starting_space != star_space:
+    #     distance = 0
+    #     current_space = starting_space
+    # else:
+    #     distance = 1
+    #     current_space = neighbors[starting_space]
+    distance = 0
+    current_space = starting_space
     looking = True
     while looking is True and current_space != star_space:
         if current_space in visited:
@@ -58,13 +61,23 @@ def distanceToStar(neighbors, star_space, starting_space, visited=None):
     return distance
 
 
-neighbors = [1, 2, 3, 4, [5, 20],
-             6, 7, 8, 9, 10,
-             11, 12, 13, 14,
-             15, 16, 17, 18,
-             19, 0, 21, 22, 23,
-             14]
-star_positions = [3, 6, 9, 12, 15, 22]
+# neighbors = [1, 2, 3, 4, [5, 20],
+#              6, 7, 8, 9, 10,
+#              11, 12, 13, 14,
+#              15, 16, 17, 18,
+#              19, 0, 21, 22, 23,
+#              14]
+star_positions = [16, 12, 21, 27, 32, 41]
+# checked spaces [16, 12, x21x, ]
+
+neighbors = [1, 2, 3, 4, [5, 21, 25], 5, 6, [8, 15], 9, 10,
+             11, 12, 13, 14, 0, 16, 17, 18, 19, 20, 9, 22, 23,
+             24, 6, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, [37, 40],
+             38, 39, 22, 41, 42, 43, 44, 45, 46, 36]
+
+for x in range(len(neighbors)):
+    print(f"neighbors[{x}] = {neighbors[x]}")
+
 junctions = []
 for x in range(0, len(neighbors)):
     if isinstance(neighbors[x], list):
@@ -80,6 +93,8 @@ for x in star_positions:
 
 shortest_paths = [[0] * len(junctions) for i in range(len(star_positions))]
 for x in range(len(ddddist)):
+    print(f"{ddddist[x]} {len(ddddist[x]) = }")
+
     # ddddist is an array of an array of distances
     # the index of the first level is tied to the array of star_positions
     # the index of the second level is the space's distance to the star given the star_position
@@ -97,11 +112,27 @@ for x in range(len(ddddist)):
                 shortest_choice = option
         shortest_paths[x][junctions.index(junction)] = shortest_choice
 
+
+print(f"{shortest_paths}")
+
 for stars in range(len(ddddist)):
     for junction in range(len(junctions)):
         print(f"When the star is at {star_positions[stars]}, "
               f"the fastest choice at junction {junction} (located at {junctions[junction]}) "
-              f"is {shortest_paths[stars][junction]}")
+              f"is {shortest_paths[stars][junction]}, to {neighbors[junctions[junction]][shortest_paths[stars][junction]]}")
+
+raise("doesn't work with the real world. Might be because it's labeled wrong")
+raise("shortest_paths is the intended output")
+
+"""
+https://csacademy.com/app/graph_editor/
+0,1, 2, 3, 4, [5, 21, 25], 5, 6, 7, [8,15], 9, 10, 11, 12, 13, 14, 0,
+16, 17, 18, 19, 20, 9, 22, 22, 23, 24, 6, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, [37, 40],
+38, 39, 22, 41, 42, 43, 44, 45, 46, 36]
+
+
+"""
+
 
 """
 strn = ""
