@@ -17,14 +17,13 @@ def distanceToStar(neighbors, star_space, starting_space, visited=None):
     # If the starting space is the star, the player is actually
     # in front of the star, so scoot them forward
 
-    # if starting_space != star_space:
-    #     distance = 0
-    #     current_space = starting_space
-    # else:
-    #     distance = 1
-    #     current_space = neighbors[starting_space]
-    distance = 0
-    current_space = starting_space
+    if starting_space != star_space:
+        distance = 0
+        current_space = starting_space
+    else:
+        distance = 1
+        current_space = neighbors[starting_space]
+
     looking = True
     while looking is True and current_space != star_space:
         if current_space in visited:
